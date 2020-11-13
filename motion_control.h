@@ -56,6 +56,9 @@ class Motion_control
 
       //---矩阵相关---
       MatrixXd transQ = MatrixXd::Zero(6,6);
+      MatrixXd transQA = MatrixXd::Zero(6,6);
+      MatrixXd transQB = MatrixXd::Zero(6,6);
+
       MatrixXd transJ_rf = MatrixXd::Zero(3,3);
       MatrixXd transJ_rh = MatrixXd::Zero(3,3);
       MatrixXd transJ_lf = MatrixXd::Zero(3,3);
@@ -190,12 +193,19 @@ class Motion_control
 
     //---四足位置计算---
     void four_feet_position_update();
-    
-    //---原地运动(四足触地)---
-    void four_feet_motion();
 
-    //---对角运动(对角足触地)---
-    void diag_feet_motion();
+    //---支撑相力矩---
+    void sup_torque(int sup_leg1,int sup_leg2, int fly_leg1,int fly_leg2);
+    
+    //---测试一：姿态平衡(对角触地)---
+    void test_diag_feet_balance();
+
+    //---测试二：状态机(对角步态)---
+    void test_state_machine_diag();
+
+    //---测试三：交替站立---
+    void test_cross_move();
+
 
 
 

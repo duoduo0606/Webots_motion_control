@@ -83,8 +83,10 @@ int main(int argc, char **argv) {
     */
       
       
-      mc.four_feet_motion();
-      
+      //mc.test_diag_feet_balance();
+      //mc.sup_torque(0,3,1,2);
+      mc.test_cross_move();
+      //mc.test_diag_feet_balance();
       
     
     
