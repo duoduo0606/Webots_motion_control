@@ -317,8 +317,8 @@
       //转置角速度矩阵
       trans_ang_vel = ang_vel.transpose();
 
-      //Jacobi
-      transJ_rf <<   0,
+      //jacobi
+      transJ_rf <<  0,
                     -L2 * sin(joint_ang(0,1)) * cos(joint_ang(0,2))
                     +L2 * cos(joint_ang(0,1)) * sin(joint_ang(0,2))
                     +L1 * cos(joint_ang(0,1)),
@@ -345,7 +345,7 @@
                     +L2 * sin(joint_ang(0,0)) * cos(joint_ang(0,1)) * cos(joint_ang(0,2)) 
                     -L2 * sin(joint_ang(0,0)) * sin(joint_ang(0,1)) * sin(joint_ang(0,2));
          
-      transJ_rh <<    0,
+      transJ_rh <<   0,
                      L2 * sin(joint_ang(1,1)) * cos(joint_ang(1,2))
                     -L2 * cos(joint_ang(1,1)) * sin(joint_ang(1,2))
                     +L1 * cos(joint_ang(1,1)),
@@ -372,14 +372,14 @@
                     -L2 * sin(joint_ang(1,0)) * cos(joint_ang(1,1)) * cos(joint_ang(1,2)) 
                     +L2 * sin(joint_ang(1,0)) * sin(joint_ang(1,1)) * sin(joint_ang(1,2));
 
-      transJ_lf <<    0,
+      transJ_lf <<   0,
                     -L2 * sin(joint_ang(2,1)) * cos(joint_ang(2,2))
                     +L2 * cos(joint_ang(2,1)) * sin(joint_ang(2,2))
                     -L1 * cos(joint_ang(2,1)),
                     -L2 * cos(joint_ang(2,1)) * sin(joint_ang(2,2))
                     +L2 * sin(joint_ang(2,1)) * cos(joint_ang(2,2)),
 
-                    +L1 * sin(joint_ang(2,0)) * cos(joint_ang(2,1))
+                    -L1 * sin(joint_ang(2,0)) * cos(joint_ang(2,1))
                     +L3 * cos(joint_ang(2,0))
                     -L2 * sin(joint_ang(2,0)) * cos(joint_ang(2,1)) * sin(joint_ang(2,2)) 
                     -L2 * sin(joint_ang(2,0)) * sin(joint_ang(2,1)) * sin(joint_ang(2,2)),
@@ -399,28 +399,28 @@
                     +L2 * sin(joint_ang(2,0)) * cos(joint_ang(2,1)) * cos(joint_ang(2,2)) 
                     -L2 * sin(joint_ang(2,0)) * sin(joint_ang(2,1)) * sin(joint_ang(2,2));
 
-      transJ_lh <<    0,
+      transJ_lh <<   0,
                      L2 * sin(joint_ang(3,1)) * cos(joint_ang(3,2))
                     -L2 * cos(joint_ang(3,1)) * sin(joint_ang(3,2))
-                    +L1 * cos(joint_ang(3,1)),
+                    -L1 * cos(joint_ang(3,1)),//+
                      L2 * cos(joint_ang(3,1)) * sin(joint_ang(3,2))
                     -L2 * sin(joint_ang(3,1)) * cos(joint_ang(3,2)),
 
-                    +L1 * sin(joint_ang(3,0)) * cos(joint_ang(3,1))
+                    -L1 * sin(joint_ang(3,0)) * cos(joint_ang(3,1))
                     +L3 * cos(joint_ang(3,0))
                     +L2 * sin(joint_ang(3,0)) * cos(joint_ang(3,1)) * sin(joint_ang(3,2)) 
                     +L2 * sin(joint_ang(3,0)) * sin(joint_ang(3,1)) * sin(joint_ang(3,2)),
-                    +L1 * cos(joint_ang(3,0)) * sin(joint_ang(3,1))
+                    -L1 * cos(joint_ang(3,0)) * sin(joint_ang(3,1))
                     +L2 * cos(joint_ang(3,0)) * sin(joint_ang(3,1)) * sin(joint_ang(3,2)) 
                     -L2 * cos(joint_ang(3,0)) * cos(joint_ang(3,1)) * sin(joint_ang(3,2)),
                     -L2 * cos(joint_ang(3,0)) * cos(joint_ang(3,1)) * cos(joint_ang(3,2)) 
                     -L2 * cos(joint_ang(3,0)) * sin(joint_ang(3,1)) * cos(joint_ang(3,2)),
 
-                    -L1 * cos(joint_ang(3,0)) * cos(joint_ang(3,1))
+                     L1 * cos(joint_ang(3,0)) * cos(joint_ang(3,1))
                     +L3 * sin(joint_ang(3,0))
                     -L2 * cos(joint_ang(3,0)) * cos(joint_ang(3,1)) * sin(joint_ang(3,2)) 
                     -L2 * cos(joint_ang(3,0)) * sin(joint_ang(3,1)) * cos(joint_ang(3,2)),
-                    +L1 * sin(joint_ang(3,0)) * sin(joint_ang(3,1))
+                    -L1 * sin(joint_ang(3,0)) * sin(joint_ang(3,1))
                     +L2 * sin(joint_ang(3,0)) * sin(joint_ang(3,1)) * sin(joint_ang(3,2)) 
                     -L2 * sin(joint_ang(3,0)) * cos(joint_ang(3,1)) * cos(joint_ang(3,2)),
                     -L2 * sin(joint_ang(3,0)) * cos(joint_ang(3,1)) * cos(joint_ang(3,2)) 
@@ -624,6 +624,7 @@
         rh_foot_F = foot_F_f_and_h_sup.tail(3);
       }
 
+      //jacobi
       transJ_rf <<  0,
                     -L2 * sin(joint_ang(0,1)) * cos(joint_ang(0,2))
                     +L2 * cos(joint_ang(0,1)) * sin(joint_ang(0,2))
@@ -685,7 +686,7 @@
                     -L2 * cos(joint_ang(2,1)) * sin(joint_ang(2,2))
                     +L2 * sin(joint_ang(2,1)) * cos(joint_ang(2,2)),
 
-                    +L1 * sin(joint_ang(2,0)) * cos(joint_ang(2,1))
+                    -L1 * sin(joint_ang(2,0)) * cos(joint_ang(2,1))
                     +L3 * cos(joint_ang(2,0))
                     -L2 * sin(joint_ang(2,0)) * cos(joint_ang(2,1)) * sin(joint_ang(2,2)) 
                     -L2 * sin(joint_ang(2,0)) * sin(joint_ang(2,1)) * sin(joint_ang(2,2)),
@@ -708,25 +709,25 @@
       transJ_lh <<   0,
                      L2 * sin(joint_ang(3,1)) * cos(joint_ang(3,2))
                     -L2 * cos(joint_ang(3,1)) * sin(joint_ang(3,2))
-                    +L1 * cos(joint_ang(3,1)),
+                    -L1 * cos(joint_ang(3,1)),//+
                      L2 * cos(joint_ang(3,1)) * sin(joint_ang(3,2))
                     -L2 * sin(joint_ang(3,1)) * cos(joint_ang(3,2)),
 
-                    +L1 * sin(joint_ang(3,0)) * cos(joint_ang(3,1))
+                    -L1 * sin(joint_ang(3,0)) * cos(joint_ang(3,1))
                     +L3 * cos(joint_ang(3,0))
                     +L2 * sin(joint_ang(3,0)) * cos(joint_ang(3,1)) * sin(joint_ang(3,2)) 
                     +L2 * sin(joint_ang(3,0)) * sin(joint_ang(3,1)) * sin(joint_ang(3,2)),
-                    +L1 * cos(joint_ang(3,0)) * sin(joint_ang(3,1))
+                    -L1 * cos(joint_ang(3,0)) * sin(joint_ang(3,1))
                     +L2 * cos(joint_ang(3,0)) * sin(joint_ang(3,1)) * sin(joint_ang(3,2)) 
                     -L2 * cos(joint_ang(3,0)) * cos(joint_ang(3,1)) * sin(joint_ang(3,2)),
                     -L2 * cos(joint_ang(3,0)) * cos(joint_ang(3,1)) * cos(joint_ang(3,2)) 
                     -L2 * cos(joint_ang(3,0)) * sin(joint_ang(3,1)) * cos(joint_ang(3,2)),
 
-                    -L1 * cos(joint_ang(3,0)) * cos(joint_ang(3,1))
+                     L1 * cos(joint_ang(3,0)) * cos(joint_ang(3,1))
                     +L3 * sin(joint_ang(3,0))
                     -L2 * cos(joint_ang(3,0)) * cos(joint_ang(3,1)) * sin(joint_ang(3,2)) 
                     -L2 * cos(joint_ang(3,0)) * sin(joint_ang(3,1)) * cos(joint_ang(3,2)),
-                    +L1 * sin(joint_ang(3,0)) * sin(joint_ang(3,1))
+                    -L1 * sin(joint_ang(3,0)) * sin(joint_ang(3,1))
                     +L2 * sin(joint_ang(3,0)) * sin(joint_ang(3,1)) * sin(joint_ang(3,2)) 
                     -L2 * sin(joint_ang(3,0)) * cos(joint_ang(3,1)) * cos(joint_ang(3,2)),
                     -L2 * sin(joint_ang(3,0)) * cos(joint_ang(3,1)) * cos(joint_ang(3,2)) 
@@ -735,12 +736,12 @@
       //A
       rf_jont_T = transJ_rf.transpose() * rf_foot_F;
       lh_jont_T = transJ_lh.transpose() * lh_foot_F;
-      lh_jont_T(0) = -lh_jont_T(0);
+      
 
       //B
       rh_jont_T = transJ_rh.transpose() * rh_foot_F;
       lf_jont_T = transJ_lf.transpose() * lf_foot_F;
-      lf_jont_T(0) = lf_jont_T(0);
+      
 
       //joint_T << rf_jont_T,rh_jont_T,lf_jont_T,lh_jont_T;
       
@@ -813,7 +814,7 @@
       yth = 0.5 * com_vel_y_d * Ts + kvy * (com_vel_y - com_vel_y_d) + y0h;
 
       //摆动高度
-      fly_hight = 0.01;
+      fly_hight = 0.05;
 
       //初始速度
       //...xdot ydot
@@ -825,19 +826,19 @@
       Tf = time_fly;
     
       //系数相关
-      kxf = -8.6;
-      kyf = -8.6;
-      kzf = -100; 
-      kxh = -8.66;
-      kyh = -8.66;
-      kzh = -100;
+      kxf = -1;
+      kyf = -1;
+      kzf = -4; 
+      kxh = -1;
+      kyh = -1;
+      kzh = -4;
 
-      dxf = -0;//-0.005
-      dyf = -0;
-      dzf = -0;//-0.01
-      dxh = -0;
-      dyh = -0;
-      dzh = -0;
+      dxf = -0.1;
+      dyf = -0.1;
+      dzf = -0.4;
+      dxh = -0.1;
+      dyh = -0.1;
+      dzh = -0.4;
     
       //前腿实时位置
       //x
@@ -929,11 +930,7 @@
             - (4 * z0h - 4 * fly_hight) * t / Tf + z0h;
       }
       
-      cout << "z0f" << z0f << endl;
-      cout << "右前脚期望的Z位置 zcf" << zcf << endl;
       
-      cout << "z0h" << z0h << endl;
-      cout << "左后脚期望的Z位置 zch" << zch << endl;
       
       //期望速度
       xcfdot = (xcf - pre_xcf)/time_step;
@@ -949,15 +946,131 @@
       pre_xch = xch;
       pre_ych = ych;
       pre_zch = zch;
+
+      //jacobi
+      transJ_rf <<  0,
+                    -L2 * sin(joint_ang(0,1)) * cos(joint_ang(0,2))
+                    +L2 * cos(joint_ang(0,1)) * sin(joint_ang(0,2))
+                    +L1 * cos(joint_ang(0,1)),
+                    -L2 * cos(joint_ang(0,1)) * sin(joint_ang(0,2))
+                    +L2 * sin(joint_ang(0,1)) * cos(joint_ang(0,2)),
+
+                     L1 * sin(joint_ang(0,0)) * cos(joint_ang(0,1))
+                    +L3 * cos(joint_ang(0,0))
+                    -L2 * sin(joint_ang(0,0)) * cos(joint_ang(0,1)) * sin(joint_ang(0,2)) 
+                    -L2 * sin(joint_ang(0,0)) * sin(joint_ang(0,1)) * sin(joint_ang(0,2)),
+                    +L1 * cos(joint_ang(0,0)) * sin(joint_ang(0,1))
+                    -L2 * cos(joint_ang(0,0)) * sin(joint_ang(0,1)) * sin(joint_ang(0,2)) 
+                    +L2 * cos(joint_ang(0,0)) * cos(joint_ang(0,1)) * sin(joint_ang(0,2)),
+                    +L2 * cos(joint_ang(0,0)) * cos(joint_ang(0,1)) * cos(joint_ang(0,2)) 
+                    +L2 * cos(joint_ang(0,0)) * sin(joint_ang(0,1)) * cos(joint_ang(0,2)),
+
+                    -L1 * cos(joint_ang(0,0)) * cos(joint_ang(0,1))
+                    +L3 * sin(joint_ang(0,0))
+                    +L2 * cos(joint_ang(0,0)) * cos(joint_ang(0,1)) * sin(joint_ang(0,2)) 
+                    +L2 * cos(joint_ang(0,0)) * sin(joint_ang(0,1)) * cos(joint_ang(0,2)),
+                    +L1 * sin(joint_ang(0,0)) * sin(joint_ang(0,1))
+                    -L2 * sin(joint_ang(0,0)) * sin(joint_ang(0,1)) * sin(joint_ang(0,2)) 
+                    +L2 * sin(joint_ang(0,0)) * cos(joint_ang(0,1)) * cos(joint_ang(0,2)),
+                    +L2 * sin(joint_ang(0,0)) * cos(joint_ang(0,1)) * cos(joint_ang(0,2)) 
+                    -L2 * sin(joint_ang(0,0)) * sin(joint_ang(0,1)) * sin(joint_ang(0,2));
+         
+      transJ_rh <<   0,
+                     L2 * sin(joint_ang(1,1)) * cos(joint_ang(1,2))
+                    -L2 * cos(joint_ang(1,1)) * sin(joint_ang(1,2))
+                    +L1 * cos(joint_ang(1,1)),
+                    +L2 * cos(joint_ang(1,1)) * sin(joint_ang(1,2))
+                    -L2 * sin(joint_ang(1,1)) * cos(joint_ang(1,2)),
+
+                     L1 * sin(joint_ang(1,0)) * cos(joint_ang(1,1))
+                    +L3 * cos(joint_ang(1,0))
+                    +L2 * sin(joint_ang(1,0)) * cos(joint_ang(1,1)) * sin(joint_ang(1,2)) 
+                    +L2 * sin(joint_ang(1,0)) * sin(joint_ang(1,1)) * sin(joint_ang(1,2)),
+                    +L1 * cos(joint_ang(1,0)) * sin(joint_ang(1,1))
+                    +L2 * cos(joint_ang(1,0)) * sin(joint_ang(1,1)) * sin(joint_ang(1,2)) 
+                    -L2 * cos(joint_ang(1,0)) * cos(joint_ang(1,1)) * sin(joint_ang(1,2)),
+                    -L2 * cos(joint_ang(1,0)) * cos(joint_ang(1,1)) * cos(joint_ang(1,2)) 
+                    -L2 * cos(joint_ang(1,0)) * sin(joint_ang(1,1)) * cos(joint_ang(1,2)),
+
+                    -L1 * cos(joint_ang(1,0)) * cos(joint_ang(1,1))
+                    +L3 * sin(joint_ang(1,0))
+                    -L2 * cos(joint_ang(1,0)) * cos(joint_ang(1,1)) * sin(joint_ang(1,2)) 
+                    -L2 * cos(joint_ang(1,0)) * sin(joint_ang(1,1)) * cos(joint_ang(1,2)),
+                    +L1 * sin(joint_ang(1,0)) * sin(joint_ang(1,1))
+                    +L2 * sin(joint_ang(1,0)) * sin(joint_ang(1,1)) * sin(joint_ang(1,2)) 
+                    -L2 * sin(joint_ang(1,0)) * cos(joint_ang(1,1)) * cos(joint_ang(1,2)),
+                    -L2 * sin(joint_ang(1,0)) * cos(joint_ang(1,1)) * cos(joint_ang(1,2)) 
+                    +L2 * sin(joint_ang(1,0)) * sin(joint_ang(1,1)) * sin(joint_ang(1,2));
+
+      transJ_lf <<   0,
+                    -L2 * sin(joint_ang(2,1)) * cos(joint_ang(2,2))
+                    +L2 * cos(joint_ang(2,1)) * sin(joint_ang(2,2))
+                    -L1 * cos(joint_ang(2,1)),
+                    -L2 * cos(joint_ang(2,1)) * sin(joint_ang(2,2))
+                    +L2 * sin(joint_ang(2,1)) * cos(joint_ang(2,2)),
+
+                    -L1 * sin(joint_ang(2,0)) * cos(joint_ang(2,1))
+                    +L3 * cos(joint_ang(2,0))
+                    -L2 * sin(joint_ang(2,0)) * cos(joint_ang(2,1)) * sin(joint_ang(2,2)) 
+                    -L2 * sin(joint_ang(2,0)) * sin(joint_ang(2,1)) * sin(joint_ang(2,2)),
+                    -L1 * cos(joint_ang(2,0)) * sin(joint_ang(2,1))
+                    -L2 * cos(joint_ang(2,0)) * sin(joint_ang(2,1)) * sin(joint_ang(2,2)) 
+                    +L2 * cos(joint_ang(2,0)) * cos(joint_ang(2,1)) * sin(joint_ang(2,2)),
+                    +L2 * cos(joint_ang(2,0)) * cos(joint_ang(2,1)) * cos(joint_ang(2,2)) 
+                    +L2 * cos(joint_ang(2,0)) * sin(joint_ang(2,1)) * cos(joint_ang(2,2)),
+
+                    +L1 * cos(joint_ang(2,0)) * cos(joint_ang(2,1))
+                    +L3 * sin(joint_ang(2,0))
+                    +L2 * cos(joint_ang(2,0)) * cos(joint_ang(2,1)) * sin(joint_ang(2,2)) 
+                    +L2 * cos(joint_ang(2,0)) * sin(joint_ang(2,1)) * cos(joint_ang(2,2)),
+                    -L1 * sin(joint_ang(2,0)) * sin(joint_ang(2,1))
+                    -L2 * sin(joint_ang(2,0)) * sin(joint_ang(2,1)) * sin(joint_ang(2,2)) 
+                    +L2 * sin(joint_ang(2,0)) * cos(joint_ang(2,1)) * cos(joint_ang(2,2)),
+                    +L2 * sin(joint_ang(2,0)) * cos(joint_ang(2,1)) * cos(joint_ang(2,2)) 
+                    -L2 * sin(joint_ang(2,0)) * sin(joint_ang(2,1)) * sin(joint_ang(2,2));
+
+      transJ_lh <<   0,
+                     L2 * sin(joint_ang(3,1)) * cos(joint_ang(3,2))
+                    -L2 * cos(joint_ang(3,1)) * sin(joint_ang(3,2))
+                    -L1 * cos(joint_ang(3,1)),//+
+                     L2 * cos(joint_ang(3,1)) * sin(joint_ang(3,2))
+                    -L2 * sin(joint_ang(3,1)) * cos(joint_ang(3,2)),
+
+                    -L1 * sin(joint_ang(3,0)) * cos(joint_ang(3,1))
+                    +L3 * cos(joint_ang(3,0))
+                    +L2 * sin(joint_ang(3,0)) * cos(joint_ang(3,1)) * sin(joint_ang(3,2)) 
+                    +L2 * sin(joint_ang(3,0)) * sin(joint_ang(3,1)) * sin(joint_ang(3,2)),
+                    -L1 * cos(joint_ang(3,0)) * sin(joint_ang(3,1))
+                    +L2 * cos(joint_ang(3,0)) * sin(joint_ang(3,1)) * sin(joint_ang(3,2)) 
+                    -L2 * cos(joint_ang(3,0)) * cos(joint_ang(3,1)) * sin(joint_ang(3,2)),
+                    -L2 * cos(joint_ang(3,0)) * cos(joint_ang(3,1)) * cos(joint_ang(3,2)) 
+                    -L2 * cos(joint_ang(3,0)) * sin(joint_ang(3,1)) * cos(joint_ang(3,2)),
+
+                     L1 * cos(joint_ang(3,0)) * cos(joint_ang(3,1))
+                    +L3 * sin(joint_ang(3,0))
+                    -L2 * cos(joint_ang(3,0)) * cos(joint_ang(3,1)) * sin(joint_ang(3,2)) 
+                    -L2 * cos(joint_ang(3,0)) * sin(joint_ang(3,1)) * cos(joint_ang(3,2)),
+                    -L1 * sin(joint_ang(3,0)) * sin(joint_ang(3,1))
+                    +L2 * sin(joint_ang(3,0)) * sin(joint_ang(3,1)) * sin(joint_ang(3,2)) 
+                    -L2 * sin(joint_ang(3,0)) * cos(joint_ang(3,1)) * cos(joint_ang(3,2)),
+                    -L2 * sin(joint_ang(3,0)) * cos(joint_ang(3,1)) * cos(joint_ang(3,2)) 
+                    +L2 * sin(joint_ang(3,0)) * sin(joint_ang(3,1)) * sin(joint_ang(3,2));
       
       //A 左前右后飞行项
       if (sinario < 3)
       {
-        foot_F_f_and_h_fly(0) = kxf * (lf_pos_x - xcf) + dxf * (lf_lnr_vel(0) - xcfdot);
-        foot_F_f_and_h_fly(1) = kyf * (lf_pos_y - ycf) + dyf * (lf_lnr_vel(1) - ycfdot);
+        // foot_F_f_and_h_fly(0) = kxf * (lf_pos_x - xcf) + dxf * (lf_lnr_vel(0) - xcfdot);
+        // foot_F_f_and_h_fly(1) = kyf * (lf_pos_y - ycf) + dyf * (lf_lnr_vel(1) - ycfdot);
+        // foot_F_f_and_h_fly(2) = kzf * (lf_pos_z - zcf) + dzf * (lf_lnr_vel(2) - zcfdot);
+        // foot_F_f_and_h_fly(3) = kxh * (rh_pos_x - xch) + dxh * (rh_lnr_vel(0) - xchdot);
+        // foot_F_f_and_h_fly(4) = kyh * (rh_pos_y - ych) + dyh * (rh_lnr_vel(1) - ychdot);
+        // foot_F_f_and_h_fly(5) = kzh * (rh_pos_z - zch) + dzh * (rh_lnr_vel(2) - zchdot);
+
+        foot_F_f_and_h_fly(0) = kxf * (lf_pos_x - 0.18) + dxf * (lf_lnr_vel(0) - 0);
+        foot_F_f_and_h_fly(1) = kyf * (lf_pos_y - 0.12) + dyf * (lf_lnr_vel(1) - 0);
         foot_F_f_and_h_fly(2) = kzf * (lf_pos_z - zcf) + dzf * (lf_lnr_vel(2) - zcfdot);
-        foot_F_f_and_h_fly(3) = kxh * (rh_pos_x - xch) + dxh * (rh_lnr_vel(0) - xchdot);
-        foot_F_f_and_h_fly(4) = kyh * (rh_pos_y - ych) + dyh * (rh_lnr_vel(1) - ychdot);
+        foot_F_f_and_h_fly(3) = kxh * (rh_pos_x - (-0.18)) + dxh * (rh_lnr_vel(0) - 0);
+        foot_F_f_and_h_fly(4) = kyh * (rh_pos_y - (-0.12)) + dyh * (rh_lnr_vel(1) - 0);
         foot_F_f_and_h_fly(5) = kzh * (rh_pos_z - zch) + dzh * (rh_lnr_vel(2) - zchdot);
 
         lf_foot_F = foot_F_f_and_h_fly.head(3);
@@ -966,26 +1079,24 @@
         lf_jont_T = transJ_lf.transpose() * lf_foot_F;
         rh_jont_T = transJ_rh.transpose() * rh_foot_F;
 
-        //*****
-        lf_jont_T(0) = lf_jont_T(0);
-        rh_jont_T(0) = -rh_jont_T(0);
       }
 
       //B 右前左后飞行项
       if (sinario > 1)
       {
-        foot_F_f_and_h_fly(0) = kxf * (rf_pos_x - xcf) + dxf * (rf_lnr_vel(0) - xcfdot);
-        foot_F_f_and_h_fly(1) = kyf * (rf_pos_y - ycf) + dyf * (rf_lnr_vel(1) - ycfdot);
+        // foot_F_f_and_h_fly(0) = kxf * (rf_pos_x - xcf) + dxf * (rf_lnr_vel(0) - xcfdot);
+        // foot_F_f_and_h_fly(1) = kyf * (rf_pos_y - ycf) + dyf * (rf_lnr_vel(1) - ycfdot);
+        // foot_F_f_and_h_fly(2) = kzf * (rf_pos_z - zcf) + dzf * (rf_lnr_vel(2) - zcfdot);
+        // foot_F_f_and_h_fly(3) = kxh * (lh_pos_x - xch) + dxh * (lh_lnr_vel(0) - xchdot);
+        // foot_F_f_and_h_fly(4) = kyh * (lh_pos_y - ych) + dyh * (lh_lnr_vel(1) - ychdot);
+        // foot_F_f_and_h_fly(5) = kzh * (lh_pos_z - zch) + dzh * (lh_lnr_vel(2) - zchdot);
+
+        foot_F_f_and_h_fly(0) = kxf * (rf_pos_x - 0.18) + dxf * (rf_lnr_vel(0) - 0);
+        foot_F_f_and_h_fly(1) = kyf * (rf_pos_y - (-0.12)) + dyf * (rf_lnr_vel(1) - 0);
         foot_F_f_and_h_fly(2) = kzf * (rf_pos_z - zcf) + dzf * (rf_lnr_vel(2) - zcfdot);
-        foot_F_f_and_h_fly(3) = kxh * (lh_pos_x - xch) + dxh * (lh_lnr_vel(0) - xchdot);
-        foot_F_f_and_h_fly(4) = kyh * (lh_pos_y - ych) + dyh * (lh_lnr_vel(1) - ychdot);
+        foot_F_f_and_h_fly(3) = kxh * (lh_pos_x - (-0.18)) + dxh * (lh_lnr_vel(0) - 0);
+        foot_F_f_and_h_fly(4) = kyh * (lh_pos_y - 0.12) + dyh * (lh_lnr_vel(1) - 0);
         foot_F_f_and_h_fly(5) = kzh * (lh_pos_z - zch) + dzh * (lh_lnr_vel(2) - zchdot);
-
-        cout << "右前脚的实际Z位置" << rf_pos_z << endl;
-        cout << "左后脚的实际Z位置" << lh_pos_z << endl;
-
-        cout << "右前脚的Z方向力" << foot_F_f_and_h_fly(2) << endl;
-        cout << "左后脚的Z方向力" << foot_F_f_and_h_fly(5) << endl;
 
         rf_foot_F = foot_F_f_and_h_fly.head(3);
         lh_foot_F = foot_F_f_and_h_fly.tail(3);
@@ -993,15 +1104,12 @@
         rf_jont_T = transJ_rf.transpose() * rf_foot_F;
         lh_jont_T = transJ_lh.transpose() * lh_foot_F;
 
-        //*****
-        rf_jont_T(0) = rf_jont_T(0);
-        lh_jont_T(0) = -lh_jont_T(0);
       }
       
-      cout << "右前脚肩关节力矩" << rf_jont_T(0) << endl;
-      cout << "左后脚肩关节力矩" << lh_jont_T(0) << endl;
-      cout << "右前脚1关节力矩" << rf_jont_T(1) << endl;
-      cout << "左后脚1关节力矩" << lh_jont_T(1) << endl;
+      //cout << "右前脚肩关节力矩" << rf_jont_T(0) << endl;
+      //cout << "左后脚肩关节力矩" << lh_jont_T(0) << endl;
+      //cout << "右前脚1关节力矩" << rf_jont_T(1) << endl;
+      //cout << "左后脚1关节力矩" << lh_jont_T(1) << endl;
       
       //力矩赋值
       for(int i = 0; i < 3; i++)
@@ -1016,9 +1124,9 @@
         { 
           limb_motors[fly_leg1][i]->setTorque(joint_T(fly_leg1,i));
           limb_motors[fly_leg2][i]->setTorque(joint_T(fly_leg2,i));
-          //cout << "rf torque" << i << joint_T(fly_leg1,i) << endl;
-          limb_motors[sup_leg1][i]->setPosition(0);
-          limb_motors[sup_leg2][i]->setPosition(0);
+          
+          //limb_motors[sup_leg1][i]->setPosition(0);
+          //limb_motors[sup_leg2][i]->setPosition(0);
         }
       
     }
@@ -1445,6 +1553,7 @@
         {
           sinario = 0;
           sup_torque(0,3,1,2);
+          fly_torque(1,2,0,3);
         }
         if (num == 1)
         {
@@ -1467,6 +1576,7 @@
         {
           sinario = 3;
           sup_torque(1,2,0,3);
+          fly_torque(0,3,1,2);
         }
         if (num == 3)
         {
@@ -1533,5 +1643,5 @@
       
       //设置力矩
       fly_torque(0,3,1,2);
-      //sup_torque(1,2,0,3);
+      sup_torque(1,2,0,3);
     }

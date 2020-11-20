@@ -52,7 +52,8 @@ select(0,NULL,NULL,NULL,&tval);
 */
 
 // This fution used to delay ms in linux environment 
-int main(int argc, char **argv) {
+int main(int argc, char **argv) 
+{
   mc.webots_init();
   mc.state = mc.Init;
    
@@ -72,39 +73,24 @@ int main(int argc, char **argv) {
   //  ds->enable(timeStep);
   // Main loop:
   // - perform simulation steps until Webots is stopping the controller
-  while (mc.robot->step(mc.timeStep) != -1) {
-
+  while (mc.robot->step(mc.timeStep) != -1)
+  {
     //never end 99
-    /*
-    mc.webots_relate();
-    mc.posture_vel_update();
-    mc.joint_vel_update();
-    mc.four_feet_position_update();
-    cout << mc.four_feet_position << endl;
-    */
-      
-      mc.fly_torque_test();
-      //mc.test_diag_feet_balance();
-      //mc.sup_torque(0,3,1,2);
-      //mc.test_cross_move();
-      cout<<"processing..."<<endl;
-      //mc.test_state_machine_diag();
-      //cout << "t:" << mc.t << endl;
-      //cout << "sinario:" << mc.sinario << endl;
-      //cout << "state:" << mc.state << endl;
-      //mc.test_diag_feet_balance();
-      
-      
-      
-    
-    
-    
 
+    //mc.fly_torque_test();
+    //mc.test_diag_feet_balance();
+    //mc.sup_torque(0,3,1,2);
+    mc.test_cross_move();
+    cout<<"processing..."<<endl;
+    //mc.test_state_machine_diag();
+    //cout << "t:" << mc.t << endl;
+    //cout << "sinario:" << mc.sinario << endl;
+    //cout << "state:" << mc.state << endl;
+    //mc.test_diag_feet_balance();
     
-   
     //  motion_controller.Outputall_PWM();
-    // Read the sensors:
-    // Enter here functions to read sensor data, like:
+    //  Read the sensors:
+    //  Enter here functions to read sensor data, like:
     //  double val = ds->getValue();
 
     // Process sensor data here.
