@@ -65,12 +65,20 @@
       z0f = 0;
       z0h = 0;
 
+      //*****
       xcf = 0;
       xch = 0;
       ycf = 0;
       ych = 0;
       zcf = 0;
       zch = 0;
+      
+      // xcf = 0.18;
+      // xch = -0.18;
+      // ycf = -0.12;
+      // ych = 0.12;
+      // zcf = -0.024;
+      // zch = -0.024;
       
       x0fdot = 0;
       y0fdot = 0;
@@ -145,16 +153,20 @@
     //---触地状态检测---
     void Motion_control::touching_check()
     {
-        //暂时统计三种结果
+        
         //sinario 0 RF LH
         if ((contect_flag(0) == 1) && (contect_flag(3) == 1) && (contect_flag.sum() == 2))
         {
+            if(sinario != 3)
             sinario = 0;
+            
         }
         //sinario 1 RF LH + another leg
         if ((contect_flag(0) == 1) && (contect_flag(3) == 1) && (contect_flag.sum() == 3))
         {
+            if(sinario != 3)
             sinario = 1;
+            
         }
         //sinario 2 four feet
         if (contect_flag.sum() == 4)
@@ -164,11 +176,13 @@
         //sinario 3 RH LF
         if ((contect_flag(1) == 1) && (contect_flag(2) == 1) && (contect_flag.sum() == 2))
         {
+            if(sinario != 0)
             sinario = 3;
         }
         //sinario 4 RH LF + another leg
         if ((contect_flag(1) == 1) && (contect_flag(2) == 1) && (contect_flag.sum() == 3))
         {
+            if(sinario != 0)
             sinario = 4;
         }
     }
@@ -438,7 +452,7 @@
     void Motion_control::joint_torque_compensation_update()
     {
       double k = 1;
-      double d = 0.002;
+      double d = 0.02;
      
       for(int j=0; j<3; j++)
         {
@@ -766,7 +780,7 @@
       //limb_motors[fly_leg2][0]->setPosition(0.3);    
     }
     
-    //---飞行相力矩---
+    //---飞行相力矩(？？？飞行相期望速度期望位置初始取值)---
     void Motion_control::fly_torque(int fly_leg1, int fly_leg2, int sup_leg1, int sup_leg2)
     {
       webots_relate();
@@ -799,6 +813,10 @@
         double kvy;//落足点选择有关系数
       
       //初始化
+      //时间相关
+      Ts = time_sup;
+      Tf = time_fly;
+
       //起始点 在状态机中采集数据
       //...x y z
 
@@ -821,24 +839,53 @@
       //A 左前右后
       //B
       
-      //时间相关
-      Ts = time_sup;
-      Tf = time_fly;
+      
     
       //系数相关
-      kxf = -1;
-      kyf = -1;
-      kzf = -4; 
-      kxh = -1;
-      kyh = -1;
-      kzh = -4;
+      // //对角步态
+      // kxf = -5;
+      // kyf = -5;
+      // kzf = -5; 
+      // kxh = -5;
+      // kyh = -5;
+      // kzh = -5;
 
-      dxf = -0.1;
-      dyf = -0.1;
-      dzf = -0.4;
-      dxh = -0.1;
-      dyh = -0.1;
-      dzh = -0.4;
+      // dxf = -0.5;
+      // dyf = -0.5;
+      // dzf = -0.5;
+      // dxh = -0.5;
+      // dyh = -0.5;
+      // dzh = -0.5;
+
+      //静止抬腿
+      kxf = -2;
+      kyf = -2;
+      kzf = -5; 
+      kxh = -2;
+      kyh = -2;
+      kzh = -5;
+
+      dxf = -0.2;
+      dyf = -0.2;
+      dzf = -0.5;
+      dxh = -0.2;
+      dyh = -0.2;
+      dzh = -0.5;
+
+      //静止抬腿时
+      // kxf = -1;
+      // kyf = -1;
+      // kzf = -4; 
+      // kxh = -1;
+      // kyh = -1;
+      // kzh = -4;
+
+      // dxf = -0.1;
+      // dyf = -0.1;
+      // dzf = -0.4;
+      // dxh = -0.1;
+      // dyh = -0.1;
+      // dzh = -0.4;
     
       //前腿实时位置
       //x
@@ -848,7 +895,7 @@
         }
       if ((t >= 0.25 * Tf) && (t < 0.75 * Tf))
         {
-          xcf = (- 4 * Tf * x0fdot - 16 * x0f) * t * t * t / (Tf * Tf * Tf)
+          xcf = (- 4 * Tf * x0fdot - 16 * xtf + 16 * x0f) * t * t * t / (Tf * Tf * Tf)
               + (7 * Tf * x0fdot + 24 * xtf - 24 * x0f) * t * t / (Tf * Tf)
               + (-15 * Tf * x0fdot - 36 * xtf + 36 * x0f) * t / (4 * Tf)
               + (9 * Tf * x0fdot + 16 * xtf) / 16;
@@ -856,6 +903,7 @@
       if (t >= 0.75 * Tf)
         {
           xcf = xtf;
+          cout << "xtf" << xtf << endl;
         }
       //y
       if ((t >= 0) && (t < 0.25 * Tf))
@@ -864,7 +912,7 @@
         }
       if ((t >= 0.25 * Tf) && (t < 0.75 * Tf))
         {
-          ycf = (- 4 * Tf * y0fdot - 16 * y0f) * t * t * t / (Tf * Tf * Tf)
+          ycf = (- 4 * Tf * y0fdot - 16 * ytf + 16 * y0f) * t * t * t / (Tf * Tf * Tf)
               + (7 * Tf * y0fdot + 24 * ytf - 24 * y0f) * t * t / (Tf * Tf)
               + (-15 * Tf * y0fdot - 36 * ytf + 36 * y0f) * t / (4 * Tf)
               + (9 * Tf * y0fdot + 16 * ytf) / 16;
@@ -893,7 +941,7 @@
         }
       if ((t >= 0.25 * Tf) && (t < 0.75 * Tf))
         {
-          xch = (- 4 * Tf * x0hdot - 16 * x0h) * t * t * t / (Tf * Tf * Tf)
+          xch = (- 4 * Tf * x0hdot - 16 * xth + 16 * x0h) * t * t * t / (Tf * Tf * Tf)
               + (7 * Tf * x0hdot + 24 * xth - 24 * x0h) * t * t / (Tf * Tf)
               + (-15 * Tf * x0hdot - 36 * xth + 36 * x0h) * t / (4 * Tf)
               + (9 * Tf * x0hdot + 16 * xth) / 16;
@@ -909,7 +957,7 @@
         }
       if ((t >= 0.25 * Tf) && (t < 0.75 * Tf))
         {
-          ych = (- 4 * Tf * y0hdot - 16 * y0h) * t * t * t / (Tf * Tf * Tf)
+          ych = (- 4 * Tf * y0hdot - 16 * yth + 16 * y0h) * t * t * t / (Tf * Tf * Tf)
               + (7 * Tf * y0hdot + 24 * yth - 24 * y0h) * t * t / (Tf * Tf)
               + (-15 * Tf * y0hdot - 36 * yth + 36 * y0h) * t / (4 * Tf)
               + (9 * Tf * y0hdot + 16 * yth) / 16;
@@ -1059,19 +1107,20 @@
       //A 左前右后飞行项
       if (sinario < 3)
       {
-        // foot_F_f_and_h_fly(0) = kxf * (lf_pos_x - xcf) + dxf * (lf_lnr_vel(0) - xcfdot);
-        // foot_F_f_and_h_fly(1) = kyf * (lf_pos_y - ycf) + dyf * (lf_lnr_vel(1) - ycfdot);
-        // foot_F_f_and_h_fly(2) = kzf * (lf_pos_z - zcf) + dzf * (lf_lnr_vel(2) - zcfdot);
-        // foot_F_f_and_h_fly(3) = kxh * (rh_pos_x - xch) + dxh * (rh_lnr_vel(0) - xchdot);
-        // foot_F_f_and_h_fly(4) = kyh * (rh_pos_y - ych) + dyh * (rh_lnr_vel(1) - ychdot);
-        // foot_F_f_and_h_fly(5) = kzh * (rh_pos_z - zch) + dzh * (rh_lnr_vel(2) - zchdot);
-
-        foot_F_f_and_h_fly(0) = kxf * (lf_pos_x - 0.18) + dxf * (lf_lnr_vel(0) - 0);
-        foot_F_f_and_h_fly(1) = kyf * (lf_pos_y - 0.12) + dyf * (lf_lnr_vel(1) - 0);
+        foot_F_f_and_h_fly(0) = kxf * (lf_pos_x - xcf) + dxf * (lf_lnr_vel(0) - xcfdot);
+        foot_F_f_and_h_fly(1) = kyf * (lf_pos_y - ycf) + dyf * (lf_lnr_vel(1) - ycfdot);
         foot_F_f_and_h_fly(2) = kzf * (lf_pos_z - zcf) + dzf * (lf_lnr_vel(2) - zcfdot);
-        foot_F_f_and_h_fly(3) = kxh * (rh_pos_x - (-0.18)) + dxh * (rh_lnr_vel(0) - 0);
-        foot_F_f_and_h_fly(4) = kyh * (rh_pos_y - (-0.12)) + dyh * (rh_lnr_vel(1) - 0);
+        foot_F_f_and_h_fly(3) = kxh * (rh_pos_x - xch) + dxh * (rh_lnr_vel(0) - xchdot);
+        foot_F_f_and_h_fly(4) = kyh * (rh_pos_y - ych) + dyh * (rh_lnr_vel(1) - ychdot);
         foot_F_f_and_h_fly(5) = kzh * (rh_pos_z - zch) + dzh * (rh_lnr_vel(2) - zchdot);
+
+        // x、y方向暂时赋值
+        // foot_F_f_and_h_fly(0) = kxf * (lf_pos_x - 0.18) + dxf * (lf_lnr_vel(0) - 0);
+        // foot_F_f_and_h_fly(1) = kyf * (lf_pos_y - 0.12) + dyf * (lf_lnr_vel(1) - 0);
+        // foot_F_f_and_h_fly(2) = kzf * (lf_pos_z - zcf) + dzf * (lf_lnr_vel(2) - zcfdot);
+        // foot_F_f_and_h_fly(3) = kxh * (rh_pos_x - (-0.18)) + dxh * (rh_lnr_vel(0) - 0);
+        // foot_F_f_and_h_fly(4) = kyh * (rh_pos_y - (-0.12)) + dyh * (rh_lnr_vel(1) - 0);
+        // foot_F_f_and_h_fly(5) = kzh * (rh_pos_z - zch) + dzh * (rh_lnr_vel(2) - zchdot);
 
         lf_foot_F = foot_F_f_and_h_fly.head(3);
         rh_foot_F = foot_F_f_and_h_fly.tail(3);
@@ -1084,19 +1133,26 @@
       //B 右前左后飞行项
       if (sinario > 1)
       {
-        // foot_F_f_and_h_fly(0) = kxf * (rf_pos_x - xcf) + dxf * (rf_lnr_vel(0) - xcfdot);
-        // foot_F_f_and_h_fly(1) = kyf * (rf_pos_y - ycf) + dyf * (rf_lnr_vel(1) - ycfdot);
-        // foot_F_f_and_h_fly(2) = kzf * (rf_pos_z - zcf) + dzf * (rf_lnr_vel(2) - zcfdot);
-        // foot_F_f_and_h_fly(3) = kxh * (lh_pos_x - xch) + dxh * (lh_lnr_vel(0) - xchdot);
-        // foot_F_f_and_h_fly(4) = kyh * (lh_pos_y - ych) + dyh * (lh_lnr_vel(1) - ychdot);
-        // foot_F_f_and_h_fly(5) = kzh * (lh_pos_z - zch) + dzh * (lh_lnr_vel(2) - zchdot);
-
-        foot_F_f_and_h_fly(0) = kxf * (rf_pos_x - 0.18) + dxf * (rf_lnr_vel(0) - 0);
-        foot_F_f_and_h_fly(1) = kyf * (rf_pos_y - (-0.12)) + dyf * (rf_lnr_vel(1) - 0);
+        foot_F_f_and_h_fly(0) = kxf * (rf_pos_x - xcf) + dxf * (rf_lnr_vel(0) - xcfdot);
+        foot_F_f_and_h_fly(1) = kyf * (rf_pos_y - ycf) + dyf * (rf_lnr_vel(1) - ycfdot);
         foot_F_f_and_h_fly(2) = kzf * (rf_pos_z - zcf) + dzf * (rf_lnr_vel(2) - zcfdot);
-        foot_F_f_and_h_fly(3) = kxh * (lh_pos_x - (-0.18)) + dxh * (lh_lnr_vel(0) - 0);
-        foot_F_f_and_h_fly(4) = kyh * (lh_pos_y - 0.12) + dyh * (lh_lnr_vel(1) - 0);
+        foot_F_f_and_h_fly(3) = kxh * (lh_pos_x - xch) + dxh * (lh_lnr_vel(0) - xchdot);
+        foot_F_f_and_h_fly(4) = kyh * (lh_pos_y - ych) + dyh * (lh_lnr_vel(1) - ychdot);
         foot_F_f_and_h_fly(5) = kzh * (lh_pos_z - zch) + dzh * (lh_lnr_vel(2) - zchdot);
+
+        // cout << "rf cur pos x" << rf_pos_x << endl;
+        // cout << "rf des pos" << xcf << endl;
+        // cout << "rf lnr vel x" << rf_lnr_vel(0)  << endl;
+        // cout << "xcfdot" << xcfdot << endl;
+        // cout << "zcfdot" << zcfdot << endl;
+
+        // x、y方向暂时赋值
+        // foot_F_f_and_h_fly(0) = kxf * (rf_pos_x - 0.18) + dxf * (rf_lnr_vel(0) - 0);
+        // foot_F_f_and_h_fly(1) = kyf * (rf_pos_y - (-0.12)) + dyf * (rf_lnr_vel(1) - 0);
+        // foot_F_f_and_h_fly(2) = kzf * (rf_pos_z - zcf) + dzf * (rf_lnr_vel(2) - zcfdot);
+        // foot_F_f_and_h_fly(3) = kxh * (lh_pos_x - (-0.18)) + dxh * (lh_lnr_vel(0) - 0);
+        // foot_F_f_and_h_fly(4) = kyh * (lh_pos_y - 0.12) + dyh * (lh_lnr_vel(1) - 0);
+        // foot_F_f_and_h_fly(5) = kzh * (lh_pos_z - zch) + dzh * (lh_lnr_vel(2) - zchdot);
 
         rf_foot_F = foot_F_f_and_h_fly.head(3);
         lh_foot_F = foot_F_f_and_h_fly.tail(3);
@@ -1106,10 +1162,6 @@
 
       }
       
-      //cout << "右前脚肩关节力矩" << rf_jont_T(0) << endl;
-      //cout << "左后脚肩关节力矩" << lh_jont_T(0) << endl;
-      //cout << "右前脚1关节力矩" << rf_jont_T(1) << endl;
-      //cout << "左后脚1关节力矩" << lh_jont_T(1) << endl;
       
       //力矩赋值
       for(int i = 0; i < 3; i++)
@@ -1337,45 +1389,60 @@
       VectorXd hold_pos = VectorXd::Zero(3);
       static int contect_leg;
 
-
       //action part
       switch (state)
       {
         case Init:
           contect_leg = 0;
-
+          //切换腿组 重置起始点
+          x0f = lf_pos_x;
+          x0h = rh_pos_x;
+          y0f = lf_pos_y;
+          y0h = rh_pos_y;
+          z0f = lf_pos_z;
+          z0h = rh_pos_z;
+          //设置初始速度
+          x0fdot = lf_lnr_vel(0);
+          y0fdot = lf_lnr_vel(1);
+          x0hdot = rh_lnr_vel(0);
+          y0hdot = rh_lnr_vel(1);
+          //pre赋值
+          pre_xcf = 0.18;
+          pre_ycf = 0.12;
+          pre_zcf = -0.024;
+          pre_xch = -0.18;
+          pre_ych = -0.12;
+          pre_zch = -0.024;
           break;
 
         case A_fly:
           //力矩规划
           sup_torque(0,3,1,2);
-          //fly_torque(1,2,0,3);
+          fly_torque(1,2,0,3);
           break;
         
         case A_hold:
           //力矩控制
           sup_torque(0,3,1,2);
-          //fly_torque(1,2,0,3);
+          fly_torque(1,2,0,3);
           
           //触地腿保持位置
           for (int i=0; i<3; i++)
           {
             limb_motors[contect_leg][i]->setPosition(hold_pos(i));
           }
-          cout << "leg num:" << contect_leg << endl;
-          cout << "pos:" << hold_pos << endl;
           break;
 
         case B_fly:
           //力矩控制
           sup_torque(1,2,0,3);
-          //fly_torque(0,3,1,2);
+          fly_torque(0,3,1,2);
           break;
 
         case B_hold:
           //力矩控制
           sup_torque(1,2,0,3);
-          //fly_torque(0,3,1,2);
+          fly_torque(0,3,1,2);
           
           //触地腿保持位置
           for (int i=0; i<3; i++)
@@ -1397,7 +1464,11 @@
           {
             state = A_fly;
           }
-          if (sinario == 1)
+          if ((sinario == 1) && (t < 0.5 * time_fly))
+          {
+            state = A_fly;
+          }
+          if ((sinario == 1) && (t >= 0.5 * time_fly))
           {
             state = A_hold;
             //触地腿检测
@@ -1414,25 +1485,35 @@
             {
               hold_pos(i) = four_feet_position(contect_leg,i);
             }
-            cout << "trans leg num" << contect_leg << endl;
           }
-          if (sinario == 3)
+          if ((sinario == 2) && (t < 0.5 * time_fly))
+          {
+            state = A_fly;
+          }
+          if ((sinario == 2) && (t >= 0.5 * time_fly))
           {
             state = B_fly;
-            limb_motors[0][0]->setPosition(0);
-            limb_motors[1][0]->setPosition(0);
-            limb_motors[2][0]->setPosition(0);
-            limb_motors[3][0]->setPosition(0);
-
-            limb_motors[0][1]->setPosition(0);
-            limb_motors[1][1]->setPosition(0);
-            limb_motors[2][1]->setPosition(0);
-            limb_motors[3][1]->setPosition(0);
-
-            limb_motors[0][2]->setPosition(0);
-            limb_motors[1][2]->setPosition(0);
-            limb_motors[2][2]->setPosition(0);
-            limb_motors[3][2]->setPosition(0);
+            //重置时间
+            t = 0;
+            //切换腿组 重置起始点
+            x0f = rf_pos_x;
+            x0h = lh_pos_x;
+            y0f = rf_pos_y;
+            y0h = lh_pos_y;
+            z0f = rf_pos_z;
+            z0h = lh_pos_z;
+            //设置初始速度
+            x0fdot = rf_lnr_vel(0);
+            y0fdot = rf_lnr_vel(1);
+            x0hdot = lh_lnr_vel(0);
+            y0hdot = lh_lnr_vel(1);
+            //pre初值
+            pre_xcf = x0f;
+            pre_ycf = y0f;
+            pre_zcf = z0f;
+            pre_xch = x0h;
+            pre_ych = y0h;
+            pre_zch = z0h;
           }
           break;
 
@@ -1458,7 +1539,13 @@
             y0fdot = rf_lnr_vel(1);
             x0hdot = lh_lnr_vel(0);
             y0hdot = lh_lnr_vel(1);
-            
+            //pre初值
+            pre_xcf = x0f;
+            pre_ycf = y0f;
+            pre_zcf = z0f;
+            pre_xch = x0h;
+            pre_ych = y0h;
+            pre_zch = z0h;
           }
           break;
       
@@ -1467,7 +1554,11 @@
           {
             state = B_fly;
           }
-          if (sinario == 4)
+          if ((sinario == 4) && (t < 0.5 * time_fly))
+          {
+            state = B_fly;
+          }
+          if ((sinario == 4) && (t >= 0.5 * time_fly))
           {
             state = B_hold;
             //触地腿检测
@@ -1485,23 +1576,34 @@
               hold_pos(i) = four_feet_position(contect_leg,i);
             }
           }
-          if (sinario == 0)
+          if ((sinario == 2) && (t < 0.5 * time_fly))
           {
             state = B_fly;
-            limb_motors[0][0]->setPosition(0);
-            limb_motors[1][0]->setPosition(0);
-            limb_motors[2][0]->setPosition(0);
-            limb_motors[3][0]->setPosition(0);
-
-            limb_motors[0][1]->setPosition(0);
-            limb_motors[1][1]->setPosition(0);
-            limb_motors[2][1]->setPosition(0);
-            limb_motors[3][1]->setPosition(0);
-
-            limb_motors[0][2]->setPosition(0);
-            limb_motors[1][2]->setPosition(0);
-            limb_motors[2][2]->setPosition(0);
-            limb_motors[3][2]->setPosition(0);
+          }
+          if ((sinario == 2) && (t >= 0.5 * time_fly))
+          {
+            state = A_fly;
+            //重置时间
+            t = 0;
+            //切换腿组 重置起始点
+            x0f = lf_pos_x;
+            x0h = rh_pos_x;
+            y0f = lf_pos_y;
+            y0h = rh_pos_y;
+            z0f = lf_pos_z;
+            z0h = rh_pos_z;
+            //设置初始速度
+            x0fdot = lf_lnr_vel(0);
+            y0fdot = lf_lnr_vel(1);
+            x0hdot = rh_lnr_vel(0);
+            y0hdot = rh_lnr_vel(1);
+            //pre赋值
+            pre_xcf = x0f;
+            pre_ycf = y0f;
+            pre_zcf = z0f;
+            pre_xch = x0h;
+            pre_ych = y0h;
+            pre_zch = z0h;
           }
           break;
 
@@ -1527,9 +1629,14 @@
             y0fdot = lf_lnr_vel(1);
             x0hdot = rh_lnr_vel(0);
             y0hdot = rh_lnr_vel(1);
-            
+            //pre赋值
+            pre_xcf = x0f;
+            pre_ycf = y0f;
+            pre_zcf = z0f;
+            pre_xch = x0h;
+            pre_ych = y0h;
+            pre_zch = z0h;
           }
-          
           break;
       }
     }
@@ -1622,25 +1729,57 @@
       {
         t = 0;
         
-        //初位置、速度更新
-        x0f = rf_pos_x;
-        y0f = rf_pos_y;
-        z0f = rf_pos_z;
-        
-        x0h = lh_pos_x;
-        y0h = lh_pos_y;
-        z0h = lh_pos_z; 
+        if (sinario > 1)
+        {
+          //初位置、速度更新
+          x0f = rf_pos_x;
+          y0f = rf_pos_y;
+          z0f = rf_pos_z;
 
-        x0fdot = rf_lnr_vel(0);
-        y0fdot = rf_lnr_vel(1);
-        x0hdot = lh_lnr_vel(0);
-        y0hdot = lh_lnr_vel(1);
+          x0h = lh_pos_x;
+          y0h = lh_pos_y;
+          z0h = lh_pos_z; 
 
+          x0fdot = rf_lnr_vel(0);
+          y0fdot = rf_lnr_vel(1);
+          x0hdot = lh_lnr_vel(0);
+          y0hdot = lh_lnr_vel(1);
+
+          pre_xcf = 0.18;
+          pre_ycf = -0.12;
+          pre_zcf = -0.024;
+          pre_xch = -0.18;
+          pre_ych = 0.12;
+          pre_zch = -0.024;
+        }
+
+        if (sinario < 3)
+        {
+          //初位置、速度更新
+          x0f = lf_pos_x;
+          y0f = lf_pos_y;
+          z0f = lf_pos_z;
+
+          x0h = rh_pos_x;
+          y0h = rh_pos_y;
+          z0h = rh_pos_z; 
+
+          x0fdot = lf_lnr_vel(0);
+          y0fdot = lf_lnr_vel(1);
+          x0hdot = rh_lnr_vel(0);
+          y0hdot = rh_lnr_vel(1);
+
+          pre_xcf = 0.18;
+          pre_ycf = 0.12;
+          pre_zcf = -0.024;
+          pre_xch = -0.18;
+          pre_ych = -0.12;
+          pre_zch = -0.024;
+        }
       }
       cout << "t:" << t << endl;
       t = t + time_step;
 
-      
       //设置力矩
       fly_torque(0,3,1,2);
       sup_torque(1,2,0,3);

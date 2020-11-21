@@ -80,14 +80,19 @@ int main(int argc, char **argv)
     //mc.fly_torque_test();
     //mc.test_diag_feet_balance();
     //mc.sup_torque(0,3,1,2);
-    mc.test_cross_move();
-    cout<<"processing..."<<endl;
-    //mc.test_state_machine_diag();
-    //cout << "t:" << mc.t << endl;
-    //cout << "sinario:" << mc.sinario << endl;
-    //cout << "state:" << mc.state << endl;
-    //mc.test_diag_feet_balance();
+    //mc.test_cross_move();
+
     
+    cout<<"processing..."<<endl;
+    mc.test_state_machine_diag();
+    mc.t = mc.t + mc.time_step;
+    cout << "t:" << mc.t << endl;
+    cout << "sinario:" << mc.sinario << endl;
+    cout << "state:" << mc.state << endl;
+    cout << "joint torque" << mc.joint_T << endl;
+
+   
+  
     //  motion_controller.Outputall_PWM();
     //  Read the sensors:
     //  Enter here functions to read sensor data, like:
